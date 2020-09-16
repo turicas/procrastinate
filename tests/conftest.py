@@ -8,7 +8,6 @@ import signal as stdlib_signal
 import string
 import uuid
 
-import aiopg
 import psycopg2
 import pytest
 from psycopg2 import sql
@@ -98,12 +97,6 @@ def connection_params(setup_db, db_factory):
     db_factory(dbname="procrastinate_test", template=setup_db)
 
     yield {"dsn": "", "dbname": "procrastinate_test"}
-
-
-@pytest.fixture
-async def connection(connection_params):
-    async with aiopg.connect(**connection_params) as connection:
-        yield connection
 
 
 @pytest.fixture
