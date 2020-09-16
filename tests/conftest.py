@@ -92,11 +92,31 @@ def setup_db():
     db_drop(dbname=dbname)
 
 
-@pytest.fixture
-def connection_params(setup_db, db_factory):
-    db_factory(dbname="procrastinate_test", template=setup_db)
+@pytest.fixture(scope="session")
+def test_db(setup_db):
+    dbname = "procrastinate_test"
+    db_create(dbname=dbname, template=setup_db)
+    yield dbname
+    db_drop(dbname=dbname)
 
-    yield {"dsn": "", "dbname": "procrastinate_test"}
+
+def reset_database(dbname):
+    sequences = (
+        "procrastinate_jobs_id_seq",
+        "procrastinate_events_id_seq",
+        "procrastinate_periodic_defers_id_seq",
+    )
+    with db_executor(dbname) as execute:
+        execute("TRUNCATE procrastinate_jobs CASCADE")
+        for sequence in sequences:
+            execute("ALTER SEQUENCE {} RESTART WITH 1", sequence)
+
+
+@pytest.fixture
+def connection_params(test_db):
+    reset_database(test_db)
+    yield {"dsn": "", "dbname": test_db}
+    reset_database(test_db)
 
 
 @pytest.fixture
