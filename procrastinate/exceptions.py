@@ -24,6 +24,12 @@ class JobError(ProcrastinateException):
     """
 
 
+class JobNotRunning(ProcrastinateException):
+    """
+    finish_job called on a job whose status is not DOING."
+    """
+
+
 class LoadFromPathError(ImportError, ProcrastinateException):
     """
     App was not found at the provided path, or the loaded object is not an App.

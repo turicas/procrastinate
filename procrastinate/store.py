@@ -17,6 +17,10 @@ def get_channel_for_queues(queues: Optional[Iterable[str]] = None) -> Iterable[s
 
 
 class JobStore:
+    """
+    A job store exposes functions for managing jobs in the queue.
+    """
+
     def __init__(self, connector: connector.BaseConnector):
         self.connector = connector
 
@@ -131,6 +135,13 @@ class JobStore:
         status: jobs.Status,
         scheduled_at: Optional[datetime.datetime] = None,
     ) -> None:
+        """
+        """
+        # The finish_job query increments the job's "attempts" value in the
+        # database, so it is required that finish_job be called on a job in
+        # the "doing state
+        if job.status != jobs.Status.DOING:
+            raise exceptions.JobNotRunning()
         assert job.id  # TODO remove this
         await self.connector.execute_query_async(
             query=sql.queries["finish_job"],

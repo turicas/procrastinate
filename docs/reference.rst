@@ -43,6 +43,17 @@ Jobs
 
 .. autoclass:: procrastinate.jobs.Job
 
+Job statuses
+------------
+
+.. autoclass:: procrastinate.jobs.Status
+    :members: TODO, DOING, SUCCEEDED, FAILED
+
+Job stores
+----------
+
+.. autoclass:: procrastinate.store.JobStore
+    :members: get_jobs, get_jobs_with_status
 
 Retry strategies
 ----------------

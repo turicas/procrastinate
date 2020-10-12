@@ -31,8 +31,10 @@ class App:
     builtin_tasks : ``Dict[str, tasks.Task]``
         The mapping of builtin tasks. Use it to programmatically access builtin tasks,
         to defer them.
-    admin : ``admin.Admin``
+    admin : `admin.Admin`
         The administration interface linked to the application.
+    job_store : `store.JobStore`
+        The job store linked to the application.
     """
 
     @classmethod

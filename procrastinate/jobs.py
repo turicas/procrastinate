@@ -27,10 +27,13 @@ def check_aware(
 
 
 class Status(Enum):
-    TODO = "todo"
-    DOING = "doing"
-    SUCCEEDED = "succeeded"
-    FAILED = "failed"
+    """
+    An enumation with all the possible job statuses.
+    """
+    TODO = "todo"             #:
+    DOING = "doing"           #:
+    SUCCEEDED = "succeeded"   #:
+    FAILED = "failed"         #:
 
 
 @attr.dataclass(frozen=True, kw_only=True)
