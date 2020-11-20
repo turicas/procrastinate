@@ -190,11 +190,18 @@ $$;
 CREATE FUNCTION procrastinate_finish_job(job_id integer, end_status procrastinate_job_status) RETURNS void
     LANGUAGE plpgsql
     AS $$
+DECLARE
+	_job_id bigint;
 BEGIN
     UPDATE procrastinate_jobs
     SET status = end_status,
         attempts = attempts + 1
-    WHERE id = job_id;
+    WHERE id = job_id AND status = 'doing'
+    RETURNING id INTO _job_id;
+
+    IF _job_id IS NULL THEN
+        RAISE 'Job with id % was not found or not in "doing" status', job_id;
+    END IF;
 END;
 $$;
 
