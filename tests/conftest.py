@@ -190,28 +190,6 @@ def job_factory(serial, random_str):
     return factory
 
 
-@pytest.fixture
-def job_factory(serial, random_str):
-    def factory(**kwargs):
-        defaults = {
-            "id": next(serial),
-            "task_name": f"task_{random_str()}",
-            "task_kwargs": {},
-            "lock": str(uuid.uuid4()),
-            "queueing_lock": None,
-            "queue": f"queue_{random_str()}",
-        }
-        final_kwargs = defaults.copy()
-        final_kwargs.update(kwargs)
-        await connector.execute_query_async(
-            """
-            INSERT INTO procrastinate_jobs (%()s) VALUES %s"""
-        )
-        return jobs.Job(**final_kwargs)
-
-    return factory
-
-
 def aware_datetime(
     year, month, day, hour=0, minute=0, second=0, microsecond=0, tz_offset=None
 ):
